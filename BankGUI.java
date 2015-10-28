@@ -20,6 +20,8 @@ public class BankGUI {
     private JMenu file, sort;
     private JMenuItem loadBinary, saveBinary, loadText, saveText, loadXML, saveXML, quit, byAccountNum, byAccountOwner, byDateOpened;
     private ButtonListener listener;
+    private BankModel bankModel;
+    
     
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -35,8 +37,11 @@ public class BankGUI {
         panelTop = new JPanel();
         panelBottom = new JPanel();
         //Top panel
-        scrollPane = new JScrollPane();
-        table = new JTable();
+       // scrollPane = new JScrollPane();
+        bankModel = new BankModel();
+        table = new JTable(bankModel);
+        scrollPane = new JScrollPane(table);
+       // table = new JTable();
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setViewportView(table);        
         frame.add(scrollPane, BorderLayout.CENTER);
@@ -196,7 +201,7 @@ public class BankGUI {
 		rightPanel.add(clear);
 		return rightPanel;
 	}
-
+	
 	private class ButtonListener implements ActionListener {
 		
 		public void actionPerformed(ActionEvent e) {

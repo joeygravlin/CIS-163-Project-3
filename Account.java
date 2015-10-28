@@ -9,6 +9,11 @@ public abstract class Account implements Serializable {
 	private String owner;
 	private GregorianCalendar dateOpened;
 	private double balance;
+	
+	public Account(){
+		
+	}
+	
 	public Account(int number, String owner, GregorianCalendar dateOpened, double balance) {
 		super();
 		this.number = number;
