@@ -12,15 +12,24 @@ import javax.swing.table.AbstractTableModel;
 public class BankModel extends AbstractTableModel{
 	
 	private ArrayList<Account> aList = new ArrayList<Account>();
-	private String[] columnNames = {"Number", "Date Opened", "Account Owner", "Current Balance"};
+	private String[] columnNames = new String[5];
+	
+	public BankModel(){
+		columnNames[0] = "Number";
+		columnNames[1] = "Date Opened";
+		columnNames[2] = "Account Owner";
+		columnNames[3] = "Current Balance";
+		columnNames[4] = "Monthly Fee";
+	}
 
 	public void addAccount(Account e){
 		aList.add(e);
 		fireTableRowsInserted(0, aList.size());
 	}
 	
-	public void removeAccount(){
-		
+	public void removeAccount(int e){
+		aList.remove(e);
+		fireTableRowsDeleted(0, aList.size());
 	}
 	
 	public Account getAccount(int i){
@@ -30,6 +39,37 @@ public class BankModel extends AbstractTableModel{
 	public int getSize(){
 		return aList.size();
 	}
+	
+	public void clearAllAccounts(){
+		aList.clear();
+		fireTableRowsDeleted(0, aList.size());
+	}
+	
+	public void updateRow(int row){
+		
+	}
+	
+	public void isChecking(){
+		String[] columnNames = new String[5];
+		columnNames[0] = "Number";
+		columnNames[1] = "Date Opened";
+		columnNames[2] = "Account Owner";
+		columnNames[3] = "Current Balance";
+		columnNames[3] = "Monthly Fee";
+	}
+	
+	public void isSavings(){
+		String[] columnNames = new String[6];
+		columnNames[0] = "Number";
+		columnNames[1] = "Date Opened";
+		columnNames[2] = "Account Owner";
+		columnNames[3] = "Current Balance";
+		columnNames[4] = "Interest Rate";
+		columnNames[5] = "Min Balance";
+		//getColumnCount();
+		//System.out.println(getColumnCount());
+	}
+	
 	
 	//fix me
 	public void saveAsBinary(String fileName){
@@ -93,9 +133,18 @@ public class BankModel extends AbstractTableModel{
 			
 		case 3:
 			return(aList.get(row).getBalance());
-			//if(aList.get(row) instanceof SavingsAccount){
-				//return('Savings Account' + ((SavingsAccount) aList))
-			//}
+			
+		case 4:
+			if(aList.get(row) instanceof CheckingAccount){
+				return ((CheckingAccount) aList.get(row)).getMonthlyFee();
+			}
+			if(aList.get(row) instanceof SavingsAccount){
+				return ((SavingsAccount) aList.get(row)).getInterestRate();
+			}
+		case 5:
+			if(aList.get(row) instanceof SavingsAccount){
+				return ((SavingsAccount) aList.get(row)).getMinBalance();
+			}
 		}
 		return col;
 	}
