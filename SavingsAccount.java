@@ -7,6 +7,10 @@ public class SavingsAccount extends Account{
 	private double minBalance;
 	private double interestRate;
 	
+	public SavingsAccount(){
+		
+	}
+	
 	public SavingsAccount(int number, String owner, GregorianCalendar dateOpened, double balance) {
 		super(number, owner, dateOpened, balance);
 		// TODO Auto-generated constructor stub

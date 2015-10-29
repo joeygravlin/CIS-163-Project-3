@@ -6,6 +6,9 @@ public class CheckingAccount extends Account{
 	private static final long serialVersionUID = 1L;
 	private double monthlyFee;
 
+	public CheckingAccount(){
+		
+	}
 	public CheckingAccount(int number, String owner, GregorianCalendar dateOpened, double balance) {
 		super(number, owner, dateOpened, balance);
 		// TODO Auto-generated constructor stub

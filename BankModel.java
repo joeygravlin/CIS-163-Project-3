@@ -67,13 +67,10 @@ public class BankModel extends AbstractTableModel{
 	
 	@Override
 	public int getColumnCount() {
-		// TODO Auto-generated method stub
 		return columnNames.length;
 	}
 	@Override
 	public int getRowCount() {
-		// TODO Auto-generated method stub
-		//System.out.println(aList.size());
 		return aList.size();
 	}
 	@Override
@@ -81,26 +78,25 @@ public class BankModel extends AbstractTableModel{
 		// TODO Auto-generated method stub
 		switch(col){
 		case 0:
-		//add getName method
-		//return(aList.get(row).getName())
+		return(aList.get(row).getNumber());
 		
 		case 1:
-			//add getCost method
-			//return(aList.get(row).getCost())
-		
-		case 2:
-			//get date correctly
+			return(aList.get(row).getDateOpened());
 			/*
 			if(DateFormat.getDateInstance(DateFormat.SHORT).format(aList.get(row).getBought()){
 				
-			}
-			*/
+			}*/
+		
+		case 2:
+			return(aList.get(row).getOwner());
+			
+			
 		case 3:
+			return(aList.get(row).getBalance());
 			//if(aList.get(row) instanceof SavingsAccount){
 				//return('Savings Account' + ((SavingsAccount) aList))
 			//}
 		}
-		//delete this
-		return aList;
+		return col;
 	}
 }
