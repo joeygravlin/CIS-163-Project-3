@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class BankGUI {
 	
@@ -20,6 +22,8 @@ public class BankGUI {
     private JMenu file, sort;
     private JMenuItem loadBinary, saveBinary, loadText, saveText, loadXML, saveXML, quit, byAccountNum, byAccountOwner, byDateOpened;
     private ButtonListener listener;
+    private BankModel bankModel;
+    
     
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -34,9 +38,28 @@ public class BankGUI {
         
         panelTop = new JPanel();
         panelBottom = new JPanel();
-        //Top panel
-        scrollPane = new JScrollPane();
-        table = new JTable();
+        bankModel = new BankModel();
+        table = new JTable(bankModel);
+        
+        
+        
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {  
+
+    		@Override
+    		public void valueChanged(ListSelectionEvent arg0) {
+    			// TODO Auto-generated method stub
+    			if(table.getSelectedRow() >= 0){
+	    			textAccountNum.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
+	    			//textDateOpened.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
+	    			textAccountOwner.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
+	    			textAccountBal.setText(table.getValueAt(table.getSelectedRow(), 3).toString());
+	    			//textAccountNum.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
+    			}
+    		}  
+        });
+        
+        
+        scrollPane = new JScrollPane(table);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setViewportView(table);        
         frame.add(scrollPane, BorderLayout.CENTER);
@@ -104,7 +127,11 @@ public class BankGUI {
         JPanel panel8 = new JPanel();
         ButtonGroup group = new ButtonGroup();
         checking = new JRadioButton("Checking");
+        checking.addActionListener(listener);
+        checking.setSelected(true);
+        bankModel.isChecking();
         savings = new JRadioButton("Savings");
+        savings.addActionListener(listener);
         group.add(checking);
         group.add(savings);
         panel8.add(checking);
@@ -159,6 +186,9 @@ public class BankGUI {
         panel7.add(Box.createRigidArea(new Dimension(30,0)));
         panel7.add(textMinBal);
         
+        textInterestRate.setEditable(false);
+        textMinBal.setEditable(false);
+        
         panelBottom.add(panel8);
         panelBottom.add(panel1);
         panelBottom.add(panel2);
@@ -196,14 +226,154 @@ public class BankGUI {
 		rightPanel.add(clear);
 		return rightPanel;
 	}
-
+	private boolean checkEmptySettings(){
+		boolean isEmpty = false;
+		if(textAccountBal.getText().isEmpty()){
+			JOptionPane.showMessageDialog(null,"Please enter an account balance","Empty Fields",JOptionPane.WARNING_MESSAGE);
+			isEmpty =  true;
+		}
+		if(textAccountNum.getText().isEmpty()){
+			JOptionPane.showMessageDialog(null,"Please enter an account number","Empty Fields",JOptionPane.WARNING_MESSAGE);
+			isEmpty =  true;
+		}
+		if(textAccountOwner.getText().isEmpty()){
+			JOptionPane.showMessageDialog(null,"Please enter an account owner","Empty Fields",JOptionPane.WARNING_MESSAGE);
+			isEmpty =  true;
+		}
+		if(textDateOpened.getText().isEmpty()){
+			JOptionPane.showMessageDialog(null,"Please enter date opened","Empty Fields",JOptionPane.WARNING_MESSAGE);
+			isEmpty =  true;
+		}
+		else{
+			isEmpty =  false;
+		}
+		return isEmpty;
+	}
+	
+	private boolean checkEmptyCheckingsSettings(){
+		boolean isEmpty = false;
+		if(textMonthlyFee.getText().isEmpty()){
+			JOptionPane.showMessageDialog(null,"Please enter a monthly fee","Empty Fields",JOptionPane.WARNING_MESSAGE);
+			isEmpty =  true;
+		}
+		else{
+			isEmpty =  false;
+		}
+		return isEmpty;
+	}
+	
+	private boolean checkEmptySavingsSettings(){
+		boolean isEmpty = false;
+		if(textInterestRate.getText().isEmpty()){
+			JOptionPane.showMessageDialog(null,"Please enter an interest rate","Empty Fields",JOptionPane.WARNING_MESSAGE);
+			isEmpty =  true;
+		}
+		if(textMinBal.getText().isEmpty()){
+			JOptionPane.showMessageDialog(null,"Please enter a min balance","Empty Fields",JOptionPane.WARNING_MESSAGE);
+			isEmpty =  true;
+		}
+		else{
+			isEmpty =  false;
+		}
+		return isEmpty;
+	}
+	
+	private void clearAllTextFields(){
+		textAccountBal.setText("");
+		textAccountNum.setText("");
+		textAccountOwner.setText("");
+		textDateOpened.setText("");
+		textInterestRate.setText("");
+		textMinBal.setText("");
+		textMonthlyFee.setText("");
+	}
+	
+	public void addChecking(){
+		boolean checkEmptySet = checkEmptySettings();
+		boolean checkEmptyCheck = checkEmptyCheckingsSettings();
+		if(checkEmptySet == false && checkEmptyCheck == false){
+			CheckingAccount checking = new CheckingAccount();
+			try {
+				checking.setBalance(Integer.parseInt(textAccountBal.getText()));
+				checking.setMonthlyFee(Integer.parseInt(textMonthlyFee.getText()));
+				checking.setNumber(Integer.parseInt(textAccountNum.getText()));
+			}
+			catch (NumberFormatException error) {
+				JOptionPane.showMessageDialog(null,"The following must be numbers:\n Account Balance\n Monthly Fee\n Account Number","Empty Fields",JOptionPane.WARNING_MESSAGE);
+			}
+			
+			//checking.setDateOpened(textDateOpened.getText());
+			checking.setOwner(textAccountOwner.getText());
+			bankModel.addAccount(checking);
+			clearAllTextFields();
+		}
+	}
+	
+	public void addSavings(){
+		boolean checkEmptySet = checkEmptySettings();
+		boolean checkEmptySave = checkEmptySavingsSettings();
+		if(checkEmptySet == false && checkEmptySave == false){
+			SavingsAccount savings = new SavingsAccount();
+			try {
+				savings.setBalance(Integer.parseInt(textAccountBal.getText()));
+				savings.setInterestRate(Integer.parseInt(textInterestRate.getText()));
+				savings.setMinBalance(Integer.parseInt(textMinBal.getText()));
+				savings.setNumber(Integer.parseInt(textAccountNum.getText()));
+			}
+			catch (NumberFormatException error) {
+				JOptionPane.showMessageDialog(null,"The following must be numbers:\n Account Balance\n Interest Rate\n Min Balance\n Account Number","Empty Fields",JOptionPane.WARNING_MESSAGE);
+			}
+			
+			//savings.setDateOpened(dateOpened);
+			savings.setOwner(textAccountOwner.getText());
+			bankModel.addAccount(savings);
+			clearAllTextFields();
+		}
+	}
+	
 	private class ButtonListener implements ActionListener {
 		
 		public void actionPerformed(ActionEvent e) {
 		//Gets source of object clicked
+			
 		Object source = e.getSource();
-		
+			if(source == checking){
+				textInterestRate.setEditable(false);
+				textMinBal.setEditable(false);
+				textInterestRate.setText("");
+				textMinBal.setText("");
+				textMonthlyFee.setEditable(true);
+				bankModel.isChecking();
+			}
+			else if(source == savings){
+				textMonthlyFee.setEditable(false);
+				textMonthlyFee.setText("");
+				textInterestRate.setEditable(true);
+				textMinBal.setEditable(true);
+				bankModel.isSavings();
+			}
+			
+			else if(source == add && checking.isSelected()){
+				addChecking();
+			}
+			else if(source == add && savings.isSelected()){
+				addSavings();
+			}
+			else if(source == delete){
+				table.getSelectedRow();
+				if(table.getSelectedRow() >= 0){
+					bankModel.removeAccount(table.getSelectedRow());
+					clearAllTextFields();
+				}
+			}
+			else if(source == update){
+				int sRow = table.getSelectedRow();
+				bankModel.updateRow(sRow);
+			}
+			else if(source == clear){
+				clearAllTextFields();
+				bankModel.clearAllAccounts();
+			}
 		}
 	}
-	
 }
