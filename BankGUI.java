@@ -397,6 +397,15 @@ public class BankGUI {
 			else if(source == loadBinary){
 					bankModel.loadFromBinary();
 			}
+			else if(source == byAccountNum){
+				bankModel.sortByAccountNumber();
+			}
+			else if(source == byAccountOwner){
+				bankModel.sortByAccountOwner();
+			}
+			else if(source == byDateOpened){
+				bankModel.sortByDateOpened();
+			}
 		}
 	}
 }

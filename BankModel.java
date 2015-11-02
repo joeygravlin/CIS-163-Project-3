@@ -12,6 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import javax.swing.AbstractListModel;
 import javax.swing.table.AbstractTableModel;
@@ -154,5 +155,19 @@ public class BankModel extends AbstractTableModel{
 			else return "";
 		}
 		return col;
+	}
+	
+	public void sortByAccountNumber(){
+		aList.sort(new accountNumberComparison());
+		fireTableRowsInserted(0, aList.size());
+	}
+	public void sortByAccountOwner(){
+		aList.sort(new accountOwnerComparison());
+		fireTableRowsInserted(0, aList.size());
+	}
+	//fix me
+	public void sortByDateOpened(){
+		aList.sort(new accountDateComparison());
+		fireTableRowsInserted(0, aList.size());
 	}
 }
