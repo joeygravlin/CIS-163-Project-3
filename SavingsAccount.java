@@ -13,7 +13,6 @@ public class SavingsAccount extends Account{
 	
 	public SavingsAccount(int number, String owner, GregorianCalendar dateOpened, double balance) {
 		super(number, owner, dateOpened, balance);
-		// TODO Auto-generated constructor stub
 	}
 
 	public double getMinBalance() {
@@ -36,6 +35,36 @@ public class SavingsAccount extends Account{
 		return serialVersionUID;
 	}
 
-	
-	//add equals and toString
+	@Override
+	public String toString() {
+		return "SavingsAccount [minBalance=" + minBalance + ", interestRate=" + interestRate + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		long temp;
+		temp = Double.doubleToLongBits(interestRate);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(minBalance);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SavingsAccount other = (SavingsAccount) obj;
+		if (Double.doubleToLongBits(interestRate) != Double.doubleToLongBits(other.interestRate))
+			return false;
+		if (Double.doubleToLongBits(minBalance) != Double.doubleToLongBits(other.minBalance))
+			return false;
+		return true;
+	}
 }

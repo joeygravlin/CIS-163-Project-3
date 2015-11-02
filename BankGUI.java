@@ -4,6 +4,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -129,7 +135,6 @@ public class BankGUI {
         checking = new JRadioButton("Checking");
         checking.addActionListener(listener);
         checking.setSelected(true);
-        bankModel.isChecking();
         savings = new JRadioButton("Savings");
         savings.addActionListener(listener);
         group.add(checking);
@@ -288,7 +293,16 @@ public class BankGUI {
 		textMonthlyFee.setText("");
 	}
 	
-	public void addChecking(){
+//	public static GregorianCalendar parseTimestamp(String timestamp) throws Exception {
+//		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+//		java.util.Date date = df.parse(timestamp);
+//		GregorianCalendar cal = new GregorianCalendar();
+//		cal.setTime(date);
+//		System.out.println(cal);
+//		return cal;
+//	  }
+	
+	public void addChecking() throws Exception{
 		boolean checkEmptySet = checkEmptySettings();
 		boolean checkEmptyCheck = checkEmptyCheckingsSettings();
 		if(checkEmptySet == false && checkEmptyCheck == false){
@@ -302,7 +316,7 @@ public class BankGUI {
 				JOptionPane.showMessageDialog(null,"The following must be numbers:\n Account Balance\n Monthly Fee\n Account Number","Empty Fields",JOptionPane.WARNING_MESSAGE);
 			}
 			
-			//checking.setDateOpened(textDateOpened.getText());
+			//checking.setDateOpened(parseTimestamp((textDateOpened.getText())));
 			checking.setOwner(textAccountOwner.getText());
 			bankModel.addAccount(checking);
 			clearAllTextFields();
@@ -343,18 +357,21 @@ public class BankGUI {
 				textInterestRate.setText("");
 				textMinBal.setText("");
 				textMonthlyFee.setEditable(true);
-				bankModel.isChecking();
 			}
 			else if(source == savings){
 				textMonthlyFee.setEditable(false);
 				textMonthlyFee.setText("");
 				textInterestRate.setEditable(true);
 				textMinBal.setEditable(true);
-				bankModel.isSavings();
 			}
 			
 			else if(source == add && checking.isSelected()){
-				addChecking();
+				try {
+					addChecking();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 			else if(source == add && savings.isSelected()){
 				addSavings();
@@ -373,6 +390,12 @@ public class BankGUI {
 			else if(source == clear){
 				clearAllTextFields();
 				bankModel.clearAllAccounts();
+			}
+			else if(source == saveBinary){
+				bankModel.saveAsBinary("C:/Users/Taylor/Desktop/tester/hello.ser");
+			}
+			else if(source == loadBinary){
+					bankModel.loadFromBinary();
 			}
 		}
 	}

@@ -11,7 +11,6 @@ public class CheckingAccount extends Account{
 	}
 	public CheckingAccount(int number, String owner, GregorianCalendar dateOpened, double balance) {
 		super(number, owner, dateOpened, balance);
-		// TODO Auto-generated constructor stub
 	}
 
 	public double getMonthlyFee() {
@@ -26,6 +25,32 @@ public class CheckingAccount extends Account{
 		return serialVersionUID;
 	}
 	
+	@Override
+	public String toString() {
+		return "CheckingAccount [monthlyFee=" + monthlyFee + "]";
+	}
 	
-	//need equals and toString
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		long temp;
+		temp = Double.doubleToLongBits(monthlyFee);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CheckingAccount other = (CheckingAccount) obj;
+		if (Double.doubleToLongBits(monthlyFee) != Double.doubleToLongBits(other.monthlyFee))
+			return false;
+		return true;
+	}
 }
