@@ -1,10 +1,18 @@
 package project3;
 
+import java.awt.List;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import javax.swing.AbstractListModel;
 import javax.swing.table.AbstractTableModel;
@@ -12,7 +20,7 @@ import javax.swing.table.AbstractTableModel;
 public class BankModel extends AbstractTableModel{
 	
 	private ArrayList<Account> aList = new ArrayList<Account>();
-	private String[] columnNames = new String[5];
+	private String[] columnNames = new String[7];
 	
 	public BankModel(){
 		columnNames[0] = "Number";
@@ -20,6 +28,8 @@ public class BankModel extends AbstractTableModel{
 		columnNames[2] = "Account Owner";
 		columnNames[3] = "Current Balance";
 		columnNames[4] = "Monthly Fee";
+		columnNames[5] = "Interest Rate";
+		columnNames[6] = "Min Balance";
 	}
 
 	public void addAccount(Account e){
@@ -49,33 +59,13 @@ public class BankModel extends AbstractTableModel{
 		
 	}
 	
-	public void isChecking(){
-		String[] columnNames = new String[5];
-		columnNames[0] = "Number";
-		columnNames[1] = "Date Opened";
-		columnNames[2] = "Account Owner";
-		columnNames[3] = "Current Balance";
-		columnNames[3] = "Monthly Fee";
-	}
-	
-	public void isSavings(){
-		String[] columnNames = new String[6];
-		columnNames[0] = "Number";
-		columnNames[1] = "Date Opened";
-		columnNames[2] = "Account Owner";
-		columnNames[3] = "Current Balance";
-		columnNames[4] = "Interest Rate";
-		columnNames[5] = "Min Balance";
-		//getColumnCount();
-		//System.out.println(getColumnCount());
-	}
-	
-	
 	//fix me
 	public void saveAsBinary(String fileName){
 		try{
 			FileOutputStream fos = new FileOutputStream(fileName);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
+			os.writeObject(aList);
+			os.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
@@ -88,8 +78,22 @@ public class BankModel extends AbstractTableModel{
 	public void saveAsXML(){
 		
 	}
-	public void loadFromBinary(){
-		
+	@SuppressWarnings("unchecked")
+	public void loadFromBinary() {
+		 
+		   try{
+			    
+			   FileInputStream fin = new FileInputStream("C:/Users/Taylor/Desktop/tester/hello.ser");
+			   ObjectInputStream ois = new ObjectInputStream(fin);
+			   aList = (ArrayList<Account>) ois.readObject();
+			   
+			   System.out.println(aList);
+			   fireTableRowsInserted(0, aList.size());
+			   ois.close();
+			   
+		   }catch(Exception ex){
+			   ex.printStackTrace();
+		   } 
 	}
 	
 	public void loadFromText(){
@@ -138,14 +142,32 @@ public class BankModel extends AbstractTableModel{
 			if(aList.get(row) instanceof CheckingAccount){
 				return ((CheckingAccount) aList.get(row)).getMonthlyFee();
 			}
+			else return "";
+		case 5:
 			if(aList.get(row) instanceof SavingsAccount){
 				return ((SavingsAccount) aList.get(row)).getInterestRate();
 			}
-		case 5:
+			else return "";
+		case 6:
 			if(aList.get(row) instanceof SavingsAccount){
 				return ((SavingsAccount) aList.get(row)).getMinBalance();
 			}
+			else return "";
 		}
 		return col;
+	}
+	
+	public void sortByAccountNumber(){
+		aList.sort(new accountNumberComparison());
+		fireTableRowsInserted(0, aList.size());
+	}
+	public void sortByAccountOwner(){
+		aList.sort(new accountOwnerComparison());
+		fireTableRowsInserted(0, aList.size());
+	}
+	//fix me
+	public void sortByDateOpened(){
+		aList.sort(new accountDateComparison());
+		fireTableRowsInserted(0, aList.size());
 	}
 }
