@@ -14,15 +14,17 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import javax.swing.AbstractListModel;
 import javax.swing.table.AbstractTableModel;
 
 public class BankModel extends AbstractTableModel{
-	
-	private ArrayList<Account> aList = new ArrayList<Account>();
-	private String[] columnNames = new String[7];
+
+	private ArrayList<Account> aList;
+	private String[] columnNames;
 	
 	public BankModel(){
+		aList = new ArrayList<>();
+		columnNames = new String[7];
+
 		columnNames[0] = "Number";
 		columnNames[1] = "Date Opened";
 		columnNames[2] = "Account Owner";
@@ -30,6 +32,17 @@ public class BankModel extends AbstractTableModel{
 		columnNames[4] = "Monthly Fee";
 		columnNames[5] = "Interest Rate";
 		columnNames[6] = "Min Balance";
+	}
+
+	/**
+	 *  Our data model is editable, so let's implement this thaaaang!
+	 *
+	 *  @param  aValue   value to assign to cell
+	 *  @param  rowIndex   row of cell
+	 *  @param  columnIndex  column of cell
+	 */
+	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+		aList.get(rowIndex);
 	}
 
 	public void addAccount(Account e){
@@ -59,7 +72,7 @@ public class BankModel extends AbstractTableModel{
 		
 	}
 	
-	//fix me
+	// TODO: fix me
 	public void saveAsBinary(String fileName){
 		try{
 			FileOutputStream fos = new FileOutputStream(fileName);
@@ -68,7 +81,7 @@ public class BankModel extends AbstractTableModel{
 			os.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}	
+		}
 	}
 	
 	public void saveAsText(){
@@ -122,22 +135,20 @@ public class BankModel extends AbstractTableModel{
 		// TODO Auto-generated method stub
 		switch(col){
 		case 0:
-		return(aList.get(row).getNumber());
-		
+			return(aList.get(row).getNumber());
+
 		case 1:
 			return(aList.get(row).getDateOpened());
-			/*
-			if(DateFormat.getDateInstance(DateFormat.SHORT).format(aList.get(row).getBought()){
-				
-			}*/
-		
+//			if(DateFormat.getDateInstance(DateFormat.SHORT).format(aList.get(row).getBought()){
+//
+//			}
+
 		case 2:
 			return(aList.get(row).getOwner());
-			
-			
+
 		case 3:
 			return(aList.get(row).getBalance());
-			
+
 		case 4:
 			if(aList.get(row) instanceof CheckingAccount){
 				return ((CheckingAccount) aList.get(row)).getMonthlyFee();

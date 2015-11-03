@@ -29,10 +29,13 @@ public class BankGUI {
     private JMenuItem loadBinary, saveBinary, loadText, saveText, loadXML, saveXML, quit, byAccountNum, byAccountOwner, byDateOpened;
     private ButtonListener listener;
     private BankModel bankModel;
-    
-    
+
+    /**
+     * Run GUI.
+     *
+     * @param args \> /dev/null
+     */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		BankGUI bank = new BankGUI();
 	}
 	

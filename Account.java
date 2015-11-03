@@ -3,6 +3,10 @@ package project3;
 import java.io.Serializable;
 import java.util.GregorianCalendar;
 
+/**
+ * Account serves as a base class for shared implementation between
+ * CheckingAccount and SavingsAccount.
+ */
 public abstract class Account implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int number;
@@ -15,7 +19,6 @@ public abstract class Account implements Serializable {
 	}
 	
 	public Account(int number, String owner, GregorianCalendar dateOpened, double balance) {
-		super();
 		this.number = number;
 		this.owner = owner;
 		this.dateOpened = dateOpened;
@@ -49,7 +52,7 @@ public abstract class Account implements Serializable {
 		return serialVersionUID;
 	}
 	
-	//FIX THIS TOSTRING
+	//TODO: fix this toString()
 	@Override
 	public String toString() {
 		return "Account [number=" + number + ", owner=" + owner + ", dateOpened=" + dateOpened + ", balance=" + balance
@@ -94,7 +97,4 @@ public abstract class Account implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
-	
 }
