@@ -6,11 +6,31 @@ import java.beans.XMLEncoder;
 import java.io.*;
 import java.util.ArrayList;
 
+
+/*****************************************************************
+ * BankModel is responsible for encapsulating the runtime state of
+ * BankGUI, along with providing methods by which the GUI can
+ * change the model's state. BankModel is also responsible for
+ * persistence of the current runtime state via binary, text, and
+ * XML formats.
+ *
+ * @author Taylor Cargill
+ * @author Chris Deneef
+ * @author Joe Gravlin
+ * @version 11/04/2015
+ *****************************************************************/
 public class BankModel extends AbstractTableModel {
 
+    /** A collection of all Accounts stored */
     private ArrayList<Account> aList;
+
+    /** Names of columns in GUI table, corresponding to properties of
+     * Accounts stored within aList */
     private String[] columnNames;
 
+    /*****************************************************************
+     * Default BankModel constructor
+     *****************************************************************/
     public BankModel() {
         aList = new ArrayList<>();
         columnNames = new String[7];
@@ -24,38 +44,82 @@ public class BankModel extends AbstractTableModel {
         columnNames[6] = "Min Balance";
     }
 
+    /*****************************************************************
+     * description
+     *
+     * @param aValue
+     * @param rowIndex
+     * @param columnIndex
+     *****************************************************************/
+    @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         aList.get(rowIndex);
     }
 
+    /*****************************************************************
+     * description
+     *
+     * @param e
+     *****************************************************************/
     public void addAccount(Account e) {
         aList.add(e);
         fireTableRowsInserted(0, aList.size());
     }
 
+    /*****************************************************************
+     * description
+     *
+     * @param e
+     * @param row
+     *****************************************************************/
     public void addAccountAtIndex(Account e, int row) {
         aList.add(row, e);
         fireTableRowsInserted(0, aList.size());
     }
 
+    /*****************************************************************
+     * description
+     *
+     * @param e
+     *****************************************************************/
     public void removeAccount(int e) {
         aList.remove(e);
         fireTableRowsDeleted(0, aList.size());
     }
 
+    /*****************************************************************
+     * description
+     *
+     * @param i
+     * @return
+     *****************************************************************/
     public Account getAccount(int i) {
         return aList.get(i);
     }
 
+    /*****************************************************************
+     * description
+     *
+     * @return
+     *****************************************************************/
     public int getSize() {
         return aList.size();
     }
 
+    /*****************************************************************
+     * description
+     *****************************************************************/
     public void clearAllAccounts() {
         aList.clear();
         fireTableRowsDeleted(0, aList.size());
     }
 
+    /*****************************************************************
+     * description
+     *
+     * @param row
+     * @return
+     *****************************************************************/
     public Account updateRow(int row) {
         if (aList.get(row) instanceof CheckingAccount) {
             aList.remove(row);
@@ -71,7 +135,11 @@ public class BankModel extends AbstractTableModel {
             return null;
     }
 
-    // TODO: fix me
+    /*****************************************************************
+     * description
+     *
+     * @param fileName
+     *****************************************************************/
     public void saveAsBinary(String fileName) {
         try {
             FileOutputStream fos = new FileOutputStream(fileName);
@@ -83,16 +151,23 @@ public class BankModel extends AbstractTableModel {
         }
     }
 
+    /*****************************************************************
+     * description
+     *
+     * @param filename
+     * @throws IOException
+     *****************************************************************/
     public void saveAsText(String filename) throws IOException {
-        PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
+        PrintWriter out = new PrintWriter(
+                new BufferedWriter(new FileWriter(filename))
+        );
         for (int i = 0; i < aList.size(); i++) {
             out.println("1");
             out.println(aList.get(i).getNumber());
             out.println(aList.get(i).getOwner());
             // out.println(aList.get(i).getDateOpened());
             out.println(aList.get(i).getBalance());
-            // TODO: aList holds all types of Account, but these last 3
-            // methods only exist for SavingsAccount
+            // ugh...
             out.println(aList.get(i).getMonthlyFee());
             out.println(aList.get(i).getInterestRate());
             out.println(aList.get(i).getMinBalance());
@@ -101,6 +176,11 @@ public class BankModel extends AbstractTableModel {
 
     }
 
+    /*****************************************************************
+     * description
+     *
+     * @param fileName
+     *****************************************************************/
     public void saveAsXML(String fileName) {
         try {
             XMLEncoder encoder = new XMLEncoder(
@@ -118,6 +198,9 @@ public class BankModel extends AbstractTableModel {
         }
     }
 
+    /*****************************************************************
+     * description
+     *****************************************************************/
     @SuppressWarnings("unchecked")
     public void loadFromBinary() {
         try {
@@ -137,8 +220,15 @@ public class BankModel extends AbstractTableModel {
         }
     }
 
+    /*****************************************************************
+     * description
+     *
+     * @throws IOException
+     *****************************************************************/
     public void loadFromText() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("./persist/BankModel.txt"));
+        BufferedReader reader = new BufferedReader(
+                new FileReader("./persist/BankModel.txt")
+        );
         String line = reader.readLine();
         fireTableRowsDeleted(0, aList.size());
         while (line != null) {
@@ -151,9 +241,14 @@ public class BankModel extends AbstractTableModel {
                 String monthlyFee = (reader.readLine());
                 String interestRate = (reader.readLine());
                 String minBalance = (reader.readLine());
-                accountItems = new CheckingAccount(Integer.parseInt(num), accountOwner,
-                        Double.parseDouble(currentBalance), Double.parseDouble(monthlyFee),
-                        Double.parseDouble(interestRate), Double.parseDouble(minBalance));
+                accountItems = new CheckingAccount(
+                        Integer.parseInt(num),
+                        accountOwner,
+                        Double.parseDouble(currentBalance),
+                        Double.parseDouble(monthlyFee),
+                        Double.parseDouble(interestRate),
+                        Double.parseDouble(minBalance)
+                );
                 aList.add(accountItems);
             }
 
@@ -162,6 +257,9 @@ public class BankModel extends AbstractTableModel {
         reader.close();
     }
 
+    /*****************************************************************
+     * description
+     *****************************************************************/
     public void loadFromXML() {
         try {
             XMLDecoder decoder = new XMLDecoder(
@@ -174,8 +272,6 @@ public class BankModel extends AbstractTableModel {
                 Account a = (Account) decoder.readObject();
                 aList.add(a);
                 listSize--;
-//                System.out.println(a);
-//                System.out.println(aList);
             }
             fireTableRowsInserted(0, aList.size());
             decoder.close();
@@ -185,28 +281,40 @@ public class BankModel extends AbstractTableModel {
         }
     }
 
+    /*****************************************************************
+     * description
+     *****************************************************************/
     @Override
     public String getColumnName(int col) {
         return columnNames[col];
     }
 
+    /*****************************************************************
+     * description
+     *****************************************************************/
     @Override
     public int getColumnCount() {
         return columnNames.length;
     }
 
+    /*****************************************************************
+     * description
+     *****************************************************************/
     @Override
     public int getRowCount() {
         return aList.size();
     }
 
+    /*****************************************************************
+     * description
+     *****************************************************************/
     @Override
     public Object getValueAt(int row, int col) {
-        // TODO Auto-generated method stub
         switch (col) {
         case 0:
             return (aList.get(row).getNumber());
 
+        // TODO: Fix me
         case 1:
             return (aList.get(row).getDateOpened());
         // if (DateFormat.getDateInstance(DateFormat.SHORT).format(
@@ -238,17 +346,25 @@ public class BankModel extends AbstractTableModel {
         return col;
     }
 
+    /*****************************************************************
+     * description
+     *****************************************************************/
     public void sortByAccountNumber() {
         aList.sort(new accountNumberComparison());
         fireTableRowsInserted(0, aList.size());
     }
 
+    /*****************************************************************
+     * description
+     *****************************************************************/
     public void sortByAccountOwner() {
         aList.sort(new accountOwnerComparison());
         fireTableRowsInserted(0, aList.size());
     }
 
-    // fix me
+    /*****************************************************************
+     * description
+     *****************************************************************/
     public void sortByDateOpened() {
         aList.sort(new accountDateComparison());
         fireTableRowsInserted(0, aList.size());
