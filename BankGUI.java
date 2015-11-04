@@ -410,15 +410,18 @@ public class BankGUI {
                 textMinBal.setEditable(true);
             }
 
-            else if (source == add && checking.isSelected()) {
+            else if (source == add) {
                 try {
-                    addChecking();
+                    if (checking.isSelected()) {
+                        addChecking();
+                    }
+                    else if (savings.isSelected()) {
+                        addSavings();
+                    }
                 } catch (Exception e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
-            } else if (source == add && savings.isSelected()) {
-                addSavings();
             } else if (source == delete) {
                 table.getSelectedRow();
                 if (table.getSelectedRow() >= 0) {
