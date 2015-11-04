@@ -84,7 +84,7 @@ public class BankModel extends AbstractTableModel {
     }
 
     public void saveAsText(String filename) throws IOException {
-        PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filename + ".txt")));
+        PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
         for (int i = 0; i < aList.size(); i++) {
             out.println("1");
             out.println(aList.get(i).getNumber());
@@ -122,6 +122,7 @@ public class BankModel extends AbstractTableModel {
         try {
             FileInputStream fin = new FileInputStream("./persist/hello.ser");
             ObjectInputStream ois = new ObjectInputStream(fin);
+            aList.clear();
             aList = (ArrayList<Account>) ois.readObject();
 
             System.out.println(aList);

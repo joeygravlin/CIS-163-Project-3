@@ -313,28 +313,57 @@ public class BankGUI {
 //        return cal;
 //    }
 
-    public void addChecking() {
+    public boolean checkNegativeChecking() {
+        boolean checker;
+        if(Double.parseDouble(textAccountBal.getText()) >= 0 && Double.parseDouble(textMonthlyFee.getText()) >= 0 && Double.parseDouble(textAccountNum.getText()) >= 0){
+            checker = true;
+        }
+        else {
+            checker = false;
+        }
+        return checker;
+    }
+    public boolean checkNegativeSavings(){
+        boolean checker;
+        if(Double.parseDouble(textAccountBal.getText()) >= 0 && Double.parseDouble(textAccountNum.getText()) >= 0 && Double.parseDouble(textInterestRate.getText()) >= 0 && Double.parseDouble(textMinBal.getText()) >= 0){
+            checker = true;
+        }
+        else {
+            checker = false;
+        }
+        return checker;
+    }
+    
+    public void addChecking() throws Exception {
         boolean checkEmptySet = checkEmptySettings();
         boolean checkEmptyCheck = checkEmptyCheckingsSettings();
 
         if (checkEmptySet == false && checkEmptyCheck == false) {
             CheckingAccount checking = new CheckingAccount();
-            try {
-                checking.setBalance(Integer.parseInt(textAccountBal.getText()));
-                checking.setMonthlyFee(Integer.parseInt(textMonthlyFee.getText()));
-                checking.setNumber(Integer.parseInt(textAccountNum.getText()));
-            }
-            catch (NumberFormatException error) {
-                JOptionPane.showMessageDialog(null, "The following must be " +
-                        "numbers:\n Account Balance\n Monthly Fee\n Account " +
-                        "Number","Empty Fields", JOptionPane.WARNING_MESSAGE);
-                error.printStackTrace();
-            }
 
-            // checking.setDateOpened(parseTimestamp((textDateOpened.getText())));
-            checking.setOwner(textAccountOwner.getText());
-            bankModel.addAccount(checking);
-            clearAllTextFields();
+            boolean checker = checkNegativeChecking();
+            if (checker == true) {
+                try {
+                    checking.setBalance(Double.parseDouble(textAccountBal.getText()));
+                    checking.setMonthlyFee(Double.parseDouble(textMonthlyFee.getText()));
+                    checking.setNumber(Integer.parseInt(textAccountNum.getText()));
+                }
+                catch (NumberFormatException error) {
+                    JOptionPane.showMessageDialog(null, "The following must be " +
+                            "numbers:\n Account Balance\n Monthly Fee\n Account " +
+                            "Number", "Empty Fields", JOptionPane.WARNING_MESSAGE);
+                    error.printStackTrace();
+                }
+    
+                // checking.setDateOpened(parseTimestamp((textDateOpened.getText())));
+                checking.setOwner(textAccountOwner.getText());
+                bankModel.addAccount(checking);
+                clearAllTextFields();
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Do not enter negative numbers",
+                        "Empty Fields", JOptionPane.WARNING_MESSAGE);
+            }
         }
     }
 
@@ -344,23 +373,31 @@ public class BankGUI {
 
         if (checkEmptySet == false && checkEmptySave == false) {
             SavingsAccount savings = new SavingsAccount();
-            try {
-                savings.setBalance(Integer.parseInt(textAccountBal.getText()));
-                savings.setInterestRate(Integer.parseInt(textInterestRate.getText()));
-                savings.setMinBalance(Integer.parseInt(textMinBal.getText()));
-                savings.setNumber(Integer.parseInt(textAccountNum.getText()));
-            }
-            catch (NumberFormatException error) {
-                JOptionPane.showMessageDialog(null, "The following must be" +
-                        "numbers:\n Account Balance\n Interest Rate\n " +
-                        "Min Balance\n Account Number",
+
+            boolean checker = checkNegativeSavings();
+            if(checker == true){
+                try {
+                    savings.setBalance(Double.parseDouble(textAccountBal.getText()));
+                    savings.setInterestRate(Double.parseDouble(textInterestRate.getText()));
+                    savings.setMinBalance(Double.parseDouble(textMinBal.getText()));
+                    savings.setNumber(Integer.parseInt(textAccountNum.getText()));
+                }
+                catch (NumberFormatException error) {
+                    JOptionPane.showMessageDialog(null, "The following must be" +
+                            "numbers:\n Account Balance\n Interest Rate\n " +
+                            "Min Balance\n Account Number",
+                            "Empty Fields", JOptionPane.WARNING_MESSAGE);
+                }
+    
+                // savings.setDateOpened(dateOpened);
+                savings.setOwner(textAccountOwner.getText());
+                bankModel.addAccount(savings);
+                clearAllTextFields();
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Do not enter negative numbers",
                         "Empty Fields", JOptionPane.WARNING_MESSAGE);
             }
-
-            // savings.setDateOpened(dateOpened);
-            savings.setOwner(textAccountOwner.getText());
-            bankModel.addAccount(savings);
-            clearAllTextFields();
         }
     }
 
@@ -401,8 +438,8 @@ public class BankGUI {
                 if (bankModel.getAccount(sRow) instanceof CheckingAccount) {
                     CheckingAccount newAccount = (CheckingAccount) bankModel.updateRow(sRow);
                     try {
-                        newAccount.setBalance(Integer.parseInt(textAccountBal.getText()));
-                        newAccount.setMonthlyFee(Integer.parseInt(textMonthlyFee.getText()));
+                        newAccount.setBalance(Double.parseDouble(textAccountBal.getText()));
+                        newAccount.setMonthlyFee(Double.parseDouble(textMonthlyFee.getText()));
                         newAccount.setNumber(Integer.parseInt(textAccountNum.getText()));
                     } catch (NumberFormatException error) {
                         JOptionPane.showMessageDialog(null,
@@ -417,9 +454,9 @@ public class BankGUI {
                 else if (bankModel.getAccount(sRow) instanceof SavingsAccount) {
                     SavingsAccount newAccount = (SavingsAccount) bankModel.updateRow(sRow);
                     try {
-                        newAccount.setBalance(Integer.parseInt(textAccountBal.getText()));
-                        newAccount.setInterestRate(Integer.parseInt(textInterestRate.getText()));
-                        newAccount.setMinBalance(Integer.parseInt(textMinBal.getText()));
+                        newAccount.setBalance(Double.parseDouble(textAccountBal.getText()));
+                        newAccount.setInterestRate(Double.parseDouble(textInterestRate.getText()));
+                        newAccount.setMinBalance(Double.parseDouble(textMinBal.getText()));
                         newAccount.setNumber(Integer.parseInt(textAccountNum.getText()));
                     } catch (NumberFormatException error) {
                         JOptionPane.showMessageDialog(null,
