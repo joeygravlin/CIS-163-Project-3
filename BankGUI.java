@@ -113,10 +113,13 @@ public class BankGUI {
 
         file.add(loadBinary);
         file.add(saveBinary);
+        file.addSeparator();
         file.add(loadText);
         file.add(saveText);
+        file.addSeparator();
         file.add(loadXML);
         file.add(saveXML);
+        file.addSeparator();
         file.add(quit);
         sort.add(byAccountNum);
         sort.add(byAccountOwner);
