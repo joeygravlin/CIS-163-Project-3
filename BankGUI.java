@@ -335,14 +335,10 @@ public class BankGUI {
     }
     
     public void addChecking() throws Exception {
-        boolean checkEmptySet = checkEmptySettings();
-        boolean checkEmptyCheck = checkEmptyCheckingsSettings();
-
-        if (checkEmptySet == false && checkEmptyCheck == false) {
+        if (!checkEmptySettings() && !checkEmptyCheckingsSettings()) {
             CheckingAccount checking = new CheckingAccount();
 
-            boolean checker = checkNegativeChecking();
-            if (checker == true) {
+            if (checkNegativeChecking()) {
                 try {
                     checking.setBalance(Double.parseDouble(textAccountBal.getText()));
                     checking.setMonthlyFee(Double.parseDouble(textMonthlyFee.getText()));
@@ -368,14 +364,10 @@ public class BankGUI {
     }
 
     public void addSavings() {
-        boolean checkEmptySet = checkEmptySettings();
-        boolean checkEmptySave = checkEmptySavingsSettings();
-
-        if (checkEmptySet == false && checkEmptySave == false) {
+        if (!checkEmptySettings() && !checkEmptySavingsSettings()) {
             SavingsAccount savings = new SavingsAccount();
 
-            boolean checker = checkNegativeSavings();
-            if(checker == true){
+            if (checkNegativeSavings()) {
                 try {
                     savings.setBalance(Double.parseDouble(textAccountBal.getText()));
                     savings.setInterestRate(Double.parseDouble(textInterestRate.getText()));
