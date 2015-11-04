@@ -106,6 +106,7 @@ public class BankModel extends AbstractTableModel {
         try {
             FileInputStream fin = new FileInputStream("C:/Users/Taylor/Desktop/tester/hello.ser");
             ObjectInputStream ois = new ObjectInputStream(fin);
+            aList.clear();
             aList = (ArrayList<Account>) ois.readObject();
 
             System.out.println(aList);
