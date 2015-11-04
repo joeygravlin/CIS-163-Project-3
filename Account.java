@@ -20,16 +20,18 @@ public abstract class Account implements Serializable {
     public Account() {
 
     }
-    public Account(int number, String owner, double balance, double monthlyFee, double interestRate, double minBalance) {
-		super();
-		this.number = number;
-		this.owner = owner;
-		this.balance = balance;
-		this.monthlyFee = monthlyFee;
-		this.interestRate = interestRate;
-		this.minBalance = minBalance;
-	}
-    
+
+    public Account(int number, String owner, double balance, double monthlyFee, double interestRate,
+            double minBalance) {
+        super();
+        this.number = number;
+        this.owner = owner;
+        this.balance = balance;
+        this.monthlyFee = monthlyFee;
+        this.interestRate = interestRate;
+        this.minBalance = minBalance;
+    }
+
     public Account(int number, String owner, GregorianCalendar dateOpened, double balance) {
         this.number = number;
         this.owner = owner;
@@ -37,26 +39,30 @@ public abstract class Account implements Serializable {
         this.balance = balance;
     }
 
-    public double getMonthlyFee(){
-    	return monthlyFee;
+    public double getMonthlyFee() {
+        return monthlyFee;
     }
-	public double getInterestRate(){
-	    return interestRate;
+
+    public double getInterestRate() {
+        return interestRate;
     }
-	public double getMinBalance(){
-		return minBalance;
-	}
-	
-	public void setMonthlyFee(double fee){
-		this.monthlyFee = fee;
+
+    public double getMinBalance() {
+        return minBalance;
     }
-	public void setInterestRate(double rate){
-		this.interestRate = rate;
+
+    public void setMonthlyFee(double fee) {
+        this.monthlyFee = fee;
     }
-	public void setMinBalance(double balance){
-		this.minBalance = balance;
-	}
-    
+
+    public void setInterestRate(double rate) {
+        this.interestRate = rate;
+    }
+
+    public void setMinBalance(double balance) {
+        this.minBalance = balance;
+    }
+
     public int getNumber() {
         return number;
     }
@@ -93,7 +99,7 @@ public abstract class Account implements Serializable {
         return serialVersionUID;
     }
 
-    //TODO: fix this toString()
+    // TODO: fix this toString()
     @Override
     public String toString() {
         return "Account [number=" + number + ", owner=" + owner + ", dateOpened=" + dateOpened + ", balance=" + balance
@@ -113,7 +119,7 @@ public abstract class Account implements Serializable {
         return result;
     }
 
-    //FIX THIS EQUALS
+    // FIX THIS EQUALS
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
