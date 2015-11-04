@@ -59,42 +59,42 @@ public class BankModel extends AbstractTableModel {
     /*****************************************************************
      * description
      *
-     * @param e
+     * @param account
      *****************************************************************/
-    public void addAccount(Account e) {
-        aList.add(e);
+    public void addAccount(Account account) {
+        aList.add(account);
         fireTableRowsInserted(0, aList.size());
     }
 
     /*****************************************************************
      * description
      *
-     * @param e
+     * @param account
      * @param row
      *****************************************************************/
-    public void addAccountAtIndex(Account e, int row) {
-        aList.add(row, e);
+    public void addAccountAtIndex(Account account, int row) {
+        aList.add(row, account);
         fireTableRowsInserted(0, aList.size());
     }
 
     /*****************************************************************
      * description
      *
-     * @param e
+     * @param index
      *****************************************************************/
-    public void removeAccount(int e) {
-        aList.remove(e);
+    public void removeAccount(int index) {
+        aList.remove(index);
         fireTableRowsDeleted(0, aList.size());
     }
 
     /*****************************************************************
      * description
      *
-     * @param i
+     * @param index
      * @return
      *****************************************************************/
-    public Account getAccount(int i) {
-        return aList.get(i);
+    public Account getAccount(int index) {
+        return aList.get(index);
     }
 
     /*****************************************************************
@@ -177,9 +177,11 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Saves current aList state to an XML file fileName.
+     * Uses the following schema: size of aList written to first
+     * element, followed by elements for each Account within aList.
      *
-     * @param fileName
+     * @param fileName  the path/filename to write out
      *****************************************************************/
     public void saveAsXML(String fileName) {
         try {
@@ -258,7 +260,8 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Loads Accounts into aList from an XML encoded file,
+     * then notifies the view.
      *****************************************************************/
     public void loadFromXML() {
         try {
@@ -283,6 +286,8 @@ public class BankModel extends AbstractTableModel {
 
     /*****************************************************************
      * description
+     *
+     * @return String   TODO
      *****************************************************************/
     @Override
     public String getColumnName(int col) {
@@ -291,6 +296,8 @@ public class BankModel extends AbstractTableModel {
 
     /*****************************************************************
      * description
+     *
+     * @return int  TODO
      *****************************************************************/
     @Override
     public int getColumnCount() {
@@ -299,6 +306,8 @@ public class BankModel extends AbstractTableModel {
 
     /*****************************************************************
      * description
+     *
+     * @return int  TODO
      *****************************************************************/
     @Override
     public int getRowCount() {
@@ -307,6 +316,8 @@ public class BankModel extends AbstractTableModel {
 
     /*****************************************************************
      * description
+     *
+     * @return Object   TODO
      *****************************************************************/
     @Override
     public Object getValueAt(int row, int col) {
