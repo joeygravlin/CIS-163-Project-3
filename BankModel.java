@@ -108,6 +108,7 @@ public class BankModel extends AbstractTableModel {
                     new FileOutputStream(fileName)
             ));
 
+            encoder.writeObject(aList.size());
             aList.forEach((Account a) -> {
                 encoder.writeObject(a);
             });
@@ -166,9 +167,17 @@ public class BankModel extends AbstractTableModel {
                     new FileInputStream("./persist/BankModel.xml")
             ));
 
-            // TODO: fix me!!!!
-            Object object = decoder.readObject();
+            int listSize = (int) decoder.readObject();
+            while (listSize > 0) {
+                Account a = (Account) decoder.readObject();
+                aList.add(a);
+                listSize--;
+//                System.out.println(a);
+//                System.out.println(aList);
+            }
+            fireTableRowsInserted(0, aList.size());
             decoder.close();
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
