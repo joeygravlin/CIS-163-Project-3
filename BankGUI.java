@@ -397,7 +397,9 @@ public class BankGUI {
         public void actionPerformed(ActionEvent e) {
             // Gets source of object clicked
             Object source = e.getSource();
-            if (source == checking) {
+            if (source == quit) {
+                System.exit(0);
+            } else if (source == checking) {
                 textInterestRate.setEditable(false);
                 textMinBal.setEditable(false);
                 textInterestRate.setText("");
