@@ -22,13 +22,7 @@ public class BankModel extends AbstractTableModel {
         columnNames[6] = "Min Balance";
     }
 
-    /**
-     *  Our data model is editable, so let's implement this thaaaang!
-     *
-     *  @param  aValue   value to assign to cell
-     *  @param  rowIndex   row of cell
-     *  @param  columnIndex  column of cell
-     */
+    
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         aList.get(rowIndex);
     }
@@ -36,6 +30,11 @@ public class BankModel extends AbstractTableModel {
     public void addAccount(Account e) {
         aList.add(e);
         fireTableRowsInserted(0, aList.size());
+    }
+    
+    public void addAccountAtIndex(Account e, int row){
+    	aList.add(row, e);
+    	fireTableRowsInserted(0, aList.size());
     }
 
     public void removeAccount(int e) {
@@ -50,14 +49,26 @@ public class BankModel extends AbstractTableModel {
     public int getSize() {
         return aList.size();
     }
-
+    
     public void clearAllAccounts() {
         aList.clear();
         fireTableRowsDeleted(0, aList.size());
     }
 
-    public void updateRow(int row) {
-
+    public Account updateRow(int row) {
+    	if(aList.get(row) instanceof CheckingAccount){
+    		aList.remove(row);
+    		fireTableRowsDeleted(0, aList.size());
+    		CheckingAccount newChecking = new CheckingAccount();
+    		return newChecking;
+    	}
+    	else if(aList.get(row) instanceof SavingsAccount){
+    		aList.remove(row);
+    		fireTableRowsDeleted(0, aList.size());
+    		SavingsAccount newSavings = new SavingsAccount();
+    		return newSavings;
+    	}
+    	else return null;
     }
 
     // TODO: fix me
@@ -72,9 +83,21 @@ public class BankModel extends AbstractTableModel {
         }
     }
 
-    public void saveAsText() {
+    public void saveAsText(String filename) throws IOException{
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filename + ".txt")));
+		for (int i=0; i<aList.size(); i++){
+			out.println("1");
+			out.println(aList.get(i).getNumber());
+			out.println(aList.get(i).getOwner());
+			//out.println(aList.get(i).getDateOpened());
+			out.println(aList.get(i).getBalance()); 
+			out.println(aList.get(i).getMonthlyFee());
+			out.println(aList.get(i).getInterestRate());
+			out.println(aList.get(i).getMinBalance());
+		}
+		out.close();
 
-    }
+	}
 
     public void saveAsXML() {
 
@@ -96,8 +119,28 @@ public class BankModel extends AbstractTableModel {
            }
     }
 
-    public void loadFromText() {
-
+    public void loadFromText(String filename) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(filename + ".txt"));
+        String line = reader.readLine();
+            fireTableRowsDeleted(0, aList.size());
+            while (line != null){
+                {
+                    CheckingAccount accountItems;
+                    String num = (reader.readLine());
+					String accountOwner = (reader.readLine());	
+					//GregorianCalendar  openDate; /*= reader.readLine();
+					String currentBalance = (reader.readLine());
+					String monthlyFee = (reader.readLine());
+					String interestRate = (reader.readLine());
+					String minBalance = (reader.readLine());
+                    accountItems = new CheckingAccount(Integer.parseInt(num), accountOwner, Double.parseDouble(currentBalance), Double.parseDouble(monthlyFee), Double.parseDouble(interestRate), Double.parseDouble(minBalance));
+                    aList.add(accountItems);
+                }
+            
+                
+            }
+            fireTableRowsInserted(0, aList.size());
+            reader.close();
     }
 
     public void loadFromXML() {

@@ -13,11 +13,23 @@ public abstract class Account implements Serializable {
     private String owner;
     private GregorianCalendar dateOpened;
     private double balance;
+    private double monthlyFee;
+    private double interestRate;
+    private double minBalance;
 
     public Account() {
 
     }
-
+    public Account(int number, String owner, double balance, double monthlyFee, double interestRate, double minBalance) {
+		super();
+		this.number = number;
+		this.owner = owner;
+		this.balance = balance;
+		this.monthlyFee = monthlyFee;
+		this.interestRate = interestRate;
+		this.minBalance = minBalance;
+	}
+    
     public Account(int number, String owner, GregorianCalendar dateOpened, double balance) {
         this.number = number;
         this.owner = owner;
@@ -25,6 +37,26 @@ public abstract class Account implements Serializable {
         this.balance = balance;
     }
 
+    public double getMonthlyFee(){
+    	return monthlyFee;
+    }
+	public double getInterestRate(){
+	    return interestRate;
+    }
+	public double getMinBalance(){
+		return minBalance;
+	}
+	
+	public void setMonthlyFee(double fee){
+		this.monthlyFee = fee;
+    }
+	public void setInterestRate(double rate){
+		this.interestRate = rate;
+    }
+	public void setMinBalance(double balance){
+		this.minBalance = balance;
+	}
+    
     public int getNumber() {
         return number;
     }

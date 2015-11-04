@@ -6,6 +6,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class BankGUI {
 
@@ -54,7 +55,15 @@ public class BankGUI {
                     //textDateOpened.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
                     textAccountOwner.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
                     textAccountBal.setText(table.getValueAt(table.getSelectedRow(), 3).toString());
-                    //textAccountNum.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
+                    
+                    if(bankModel.getAccount(table.getSelectedRow()) instanceof CheckingAccount && checking.isSelected()){
+                    	textMonthlyFee.setText(table.getValueAt(table.getSelectedRow(), 4).toString());
+                    }    
+                    else if(bankModel.getAccount(table.getSelectedRow()) instanceof SavingsAccount && savings.isSelected()){
+                    	textInterestRate.setText(table.getValueAt(table.getSelectedRow(), 5).toString());
+                        textMinBal.setText(table.getValueAt(table.getSelectedRow(), 6).toString());
+                    } 
+                    
                 }
             }
         });
@@ -378,7 +387,36 @@ public class BankGUI {
             }
             else if(source == update) {
                 int sRow = table.getSelectedRow();
-                bankModel.updateRow(sRow);
+                if(bankModel.getAccount(sRow) instanceof CheckingAccount){
+                	CheckingAccount newAccount = (CheckingAccount) bankModel.updateRow(sRow);
+                	try {
+                        newAccount.setBalance(Integer.parseInt(textAccountBal.getText()));
+                        newAccount.setMonthlyFee(Integer.parseInt(textMonthlyFee.getText()));
+                        newAccount.setNumber(Integer.parseInt(textAccountNum.getText()));
+                    }
+                    catch (NumberFormatException error) {
+                        JOptionPane.showMessageDialog(null,"The following must be numbers:\n Account Balance\n Monthly Fee\n Account Number","Empty Fields",JOptionPane.WARNING_MESSAGE);
+                    }
+                	newAccount.setOwner(textAccountOwner.getText());
+                    bankModel.addAccount(newAccount);
+                    clearAllTextFields();
+                }
+                
+                else if(bankModel.getAccount(sRow) instanceof SavingsAccount){
+                	SavingsAccount newAccount = (SavingsAccount) bankModel.updateRow(sRow);
+                	try {
+                        newAccount.setBalance(Integer.parseInt(textAccountBal.getText()));
+                        newAccount.setInterestRate(Integer.parseInt(textInterestRate.getText()));
+                        newAccount.setMinBalance(Integer.parseInt(textMinBal.getText()));
+                        newAccount.setNumber(Integer.parseInt(textAccountNum.getText()));
+                    }
+                    catch (NumberFormatException error) {
+                        JOptionPane.showMessageDialog(null,"The following must be numbers:\n Account Balance\n Interest Rate\n Min Balance\n Account Number","Empty Fields",JOptionPane.WARNING_MESSAGE);
+                    }
+                	newAccount.setOwner(textAccountOwner.getText());
+                    bankModel.addAccount(newAccount);
+                    clearAllTextFields();
+                }
             }
             else if(source == clear) {
                 clearAllTextFields();
@@ -388,7 +426,7 @@ public class BankGUI {
                 bankModel.saveAsBinary("C:/Users/Taylor/Desktop/tester/hello.ser");
             }
             else if(source == loadBinary) {
-                    bankModel.loadFromBinary();
+                bankModel.loadFromBinary();
             }
             else if(source == byAccountNum) {
                 bankModel.sortByAccountNumber();
@@ -399,6 +437,26 @@ public class BankGUI {
             else if(source == byDateOpened) {
                 bankModel.sortByDateOpened();
             }
+            else if (source == loadText)
+			{
+				try {
+					bankModel.loadFromText("C:/Users/Taylor/Desktop/tester/");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+            
+			else if (source == saveText)
+			{
+				try {
+					bankModel.saveAsText("C:/Users/Taylor/Desktop/tester/");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+            
         }
     }
 }

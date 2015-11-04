@@ -8,6 +8,12 @@ public class CheckingAccount extends Account {
 
     public CheckingAccount() {
     }
+    
+    public CheckingAccount(int number, String owner,  double balance, double monthlyFee, double interestRate, double minBalance) {
+		super(number, owner, balance, monthlyFee, interestRate, minBalance );
+
+	}
+    
     public CheckingAccount(int number, String owner, GregorianCalendar dateOpened, double balance) {
         super(number, owner, dateOpened, balance);
     }
