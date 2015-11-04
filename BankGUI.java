@@ -61,6 +61,15 @@ public class BankGUI {
                     textAccountOwner.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
                     textAccountBal.setText(table.getValueAt(table.getSelectedRow(), 3).toString());
 
+                    if(bankModel.getAccount(table.getSelectedRow())
+                            instanceof CheckingAccount){
+                        checking.setSelected(true);
+                        checking.doClick();
+                    }
+                    else{
+                        savings.setSelected(true);
+                        savings.doClick();
+                    }
                     if (bankModel.getAccount(table.getSelectedRow()) instanceof CheckingAccount
                             && checking.isSelected()) {
                         textMonthlyFee.setText(table.getValueAt(table.getSelectedRow(), 4).toString());
@@ -364,8 +373,10 @@ public class BankGUI {
 
                 try {
                     checking.setDateOpened(
-                            parseTimestamp(textDateOpened.getText())
+
+                    parseTimestamp(textDateOpened.getText())
                     );
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -466,6 +477,15 @@ public class BankGUI {
                                 "The following must be numbers:\n Account Balance\n Monthly Fee\n Account Number",
                                 "Empty Fields", JOptionPane.WARNING_MESSAGE);
                     }
+                    try {
+                        newAccount.setDateOpened(
+
+                                parseTimestamp(textDateOpened.getText())
+                        );
+
+                    } catch (Exception e2) {
+                        e2.printStackTrace();
+                    }
                     newAccount.setOwner(textAccountOwner.getText());
                     bankModel.addAccount(newAccount);
                     clearAllTextFields();
@@ -482,6 +502,15 @@ public class BankGUI {
                         JOptionPane.showMessageDialog(null,
                                 "The following must be numbers:\n Account Balance\n Interest Rate\n Min Balance\n Account Number",
                                 "Empty Fields", JOptionPane.WARNING_MESSAGE);
+                    }
+                    try {
+                        newAccount.setDateOpened(
+
+                                parseTimestamp(textDateOpened.getText())
+                        );
+
+                    } catch (Exception e2) {
+                        e2.printStackTrace();
                     }
                     newAccount.setOwner(textAccountOwner.getText());
                     bankModel.addAccount(newAccount);
