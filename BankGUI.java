@@ -467,7 +467,7 @@ public class BankGUI {
                 bankModel.clearAllAccounts();
             }
             else if(source == saveBinary) {
-                bankModel.saveAsBinary("./persist/hello.ser");
+                bankModel.saveAsBinary("./persist/BankModel.bin");
             }
             else if(source == loadBinary) {
                 bankModel.loadFromBinary();

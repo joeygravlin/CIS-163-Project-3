@@ -121,7 +121,9 @@ public class BankModel extends AbstractTableModel {
     @SuppressWarnings("unchecked")
     public void loadFromBinary() {
         try {
-            FileInputStream fin = new FileInputStream("./persist/hello.ser");
+            FileInputStream fin = new FileInputStream(
+                    "./persist/BankModel.bin"
+            );
             ObjectInputStream ois = new ObjectInputStream(fin);
             aList.clear();
             aList = (ArrayList<Account>) ois.readObject();
