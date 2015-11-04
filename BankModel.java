@@ -329,9 +329,6 @@ public class BankModel extends AbstractTableModel {
         // TODO: Fix me
         case 1:
             return (aList.get(row).getDateOpened());
-        // if (DateFormat.getDateInstance(DateFormat.SHORT).format(
-        // aList.get(row).getBought())) {
-        // }
 
         case 2:
             return (aList.get(row).getOwner());

@@ -7,6 +7,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
 
 public class BankGUI {
 
@@ -306,15 +309,15 @@ public class BankGUI {
         textMonthlyFee.setText("");
     }
 
-//    public static GregorianCalendar parseTimestamp(String timestamp)
-//            throws Exception {
-//        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-//        java.util.Date date = df.parse(timestamp);
-//        GregorianCalendar cal = new GregorianCalendar();
-//        cal.setTime(date);
-//        System.out.println(cal);
-//        return cal;
-//    }
+    public static GregorianCalendar parseTimestamp(String timestamp)
+            throws Exception {
+        DateFormat        df   = new SimpleDateFormat("dd/MM/yyyy");
+        java.util.Date    date = df.parse(timestamp);
+        GregorianCalendar cal  = new GregorianCalendar();
+        cal.setTime(date);
+        System.out.println(cal);
+        return cal;
+    }
 
     public boolean checkNegativeChecking() {
         boolean checker;
@@ -326,7 +329,7 @@ public class BankGUI {
         }
         return checker;
     }
-    public boolean checkNegativeSavings(){
+    public boolean checkNegativeSavings() {
         boolean checker;
         if(Double.parseDouble(textAccountBal.getText()) >= 0 && Double.parseDouble(textAccountNum.getText()) >= 0 && Double.parseDouble(textInterestRate.getText()) >= 0 && Double.parseDouble(textMinBal.getText()) >= 0){
             checker = true;
@@ -337,7 +340,7 @@ public class BankGUI {
         return checker;
     }
     
-    public void addChecking() throws Exception {
+    public void addChecking() {
         if (!checkEmptySettings() && !checkEmptyCheckingsSettings()) {
             CheckingAccount checking = new CheckingAccount();
 
@@ -353,8 +356,14 @@ public class BankGUI {
                             "Number", "Empty Fields", JOptionPane.WARNING_MESSAGE);
                     error.printStackTrace();
                 }
-    
-                // checking.setDateOpened(parseTimestamp((textDateOpened.getText())));
+
+                try {
+                    checking.setDateOpened(
+                            parseTimestamp(textDateOpened.getText())
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 checking.setOwner(textAccountOwner.getText());
                 bankModel.addAccount(checking);
                 clearAllTextFields();
@@ -383,8 +392,14 @@ public class BankGUI {
                             "Min Balance\n Account Number",
                             "Empty Fields", JOptionPane.WARNING_MESSAGE);
                 }
-    
-                // savings.setDateOpened(dateOpened);
+
+                try {
+                    savings.setDateOpened(
+                            parseTimestamp(textDateOpened.getText())
+                    );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 savings.setOwner(textAccountOwner.getText());
                 bankModel.addAccount(savings);
                 clearAllTextFields();
