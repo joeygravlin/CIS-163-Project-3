@@ -1,6 +1,8 @@
 package project3;
 
 import javax.swing.table.AbstractTableModel;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -76,14 +78,26 @@ public class BankModel extends AbstractTableModel {
 
     }
 
-    public void saveAsXML() {
+    public void saveAsXML(String fileName) {
+        try {
+            XMLEncoder encoder = new XMLEncoder(
+                new BufferedOutputStream(
+                    new FileOutputStream(fileName)
+            ));
 
+            aList.forEach((Account a) -> {
+                encoder.writeObject(a);
+            });
+            encoder.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressWarnings("unchecked")
     public void loadFromBinary() {
            try {
-               FileInputStream fin = new FileInputStream("C:/Users/Taylor/Desktop/tester/hello.ser");
+               FileInputStream fin = new FileInputStream("./persist/hello.ser");
                ObjectInputStream ois = new ObjectInputStream(fin);
                aList = (ArrayList<Account>) ois.readObject();
 
@@ -101,7 +115,18 @@ public class BankModel extends AbstractTableModel {
     }
 
     public void loadFromXML() {
+        try {
+            XMLDecoder decoder = new XMLDecoder(
+                new BufferedInputStream(
+                    new FileInputStream("./persist/BankModel.xml")
+            ));
 
+            // TODO: fix me!!!!
+            Object object = decoder.readObject();
+            decoder.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

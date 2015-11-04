@@ -297,9 +297,10 @@ public class BankGUI {
 //        return cal;
 //    }
 
-    public void addChecking() throws Exception {
+    public void addChecking() {
         boolean checkEmptySet = checkEmptySettings();
         boolean checkEmptyCheck = checkEmptyCheckingsSettings();
+
         if(checkEmptySet == false && checkEmptyCheck == false) {
             CheckingAccount checking = new CheckingAccount();
             try {
@@ -308,7 +309,10 @@ public class BankGUI {
                 checking.setNumber(Integer.parseInt(textAccountNum.getText()));
             }
             catch (NumberFormatException error) {
-                JOptionPane.showMessageDialog(null,"The following must be numbers:\n Account Balance\n Monthly Fee\n Account Number","Empty Fields",JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "The following must be " +
+                        "numbers:\n Account Balance\n Monthly Fee\n Account " +
+                        "Number","Empty Fields", JOptionPane.WARNING_MESSAGE);
+                error.printStackTrace();
             }
 
             //checking.setDateOpened(parseTimestamp((textDateOpened.getText())));
@@ -385,10 +389,16 @@ public class BankGUI {
                 bankModel.clearAllAccounts();
             }
             else if(source == saveBinary) {
-                bankModel.saveAsBinary("C:/Users/Taylor/Desktop/tester/hello.ser");
+                bankModel.saveAsBinary("./persist/hello.ser");
             }
             else if(source == loadBinary) {
-                    bankModel.loadFromBinary();
+                bankModel.loadFromBinary();
+            }
+            else if(source == saveXML) {
+                bankModel.saveAsXML("./persist/BankModel.xml");
+            }
+            else if(source == loadXML) {
+                bankModel.loadFromXML();
             }
             else if(source == byAccountNum) {
                 bankModel.sortByAccountNumber();
