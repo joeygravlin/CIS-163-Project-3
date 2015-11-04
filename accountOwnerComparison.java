@@ -2,7 +2,7 @@ package project3;
 
 import java.util.Comparator;
 
-public class accountOwnerComparison implements Comparator<Account>{
+public class accountOwnerComparison implements Comparator<Account> {
 
     @Override
     public int compare(Account o1, Account o2) {
