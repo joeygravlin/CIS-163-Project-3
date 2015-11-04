@@ -316,25 +316,26 @@ public class BankModel extends AbstractTableModel {
      * Returns the value for the cell at <code>column</code> and
      * <code>row</code>.
      *
-     * @param   row        the row whose value is to be queried
-     * @param   column     the column whose value is to be queried
+     * @param   row     the row whose value is to be queried
+     * @param   col     the column whose value is to be queried
      * @return  the value Object at the specified cell
      *****************************************************************/
     @Override
     public Object getValueAt(int row, int col) {
         switch (col) {
         case 0:
-            return (aList.get(row).getNumber());
+            return aList.get(row).getNumber();
 
-        // TODO: Fix me
         case 1:
-            return (aList.get(row).getDateOpened());
+            // Should be refactored, currently using static method
+            // formatTimestamp from BankGUI. Works for now though.
+            return BankGUI.formatTimestamp(aList.get(row).getDateOpened());
 
         case 2:
-            return (aList.get(row).getOwner());
+            return aList.get(row).getOwner();
 
         case 3:
-            return (aList.get(row).getBalance());
+            return aList.get(row).getBalance();
 
         case 4:
             if (aList.get(row) instanceof CheckingAccount) {

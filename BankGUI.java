@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class BankGUI {
@@ -56,8 +57,7 @@ public class BankGUI {
                 // TODO Auto-generated method stub
                 if (table.getSelectedRow() >= 0) {
                     textAccountNum.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
-                    // textDateOpened.setText(table.getValueAt(table.getSelectedRow(),
-                    // 1).toString());
+                    textDateOpened.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
                     textAccountOwner.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
                     textAccountBal.setText(table.getValueAt(table.getSelectedRow(), 3).toString());
 
@@ -315,8 +315,13 @@ public class BankGUI {
         java.util.Date    date = df.parse(timestamp);
         GregorianCalendar cal  = new GregorianCalendar();
         cal.setTime(date);
-        System.out.println(cal);
         return cal;
+    }
+
+    public static String formatTimestamp(GregorianCalendar gc) {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = gc.getTime();
+        return df.format(date);
     }
 
     public boolean checkNegativeChecking() {
