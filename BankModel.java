@@ -21,7 +21,7 @@ import java.util.ArrayList;
  *****************************************************************/
 public class BankModel extends AbstractTableModel {
 
-    /** A collection of all Accounts stored */
+    /** A collection of all Accounts stored in this model */
     private ArrayList<Account> aList;
 
     /** Names of columns in GUI table, corresponding to properties of
@@ -45,21 +45,10 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Adds an Account to the end of aList, then notifies view
+     * about the insertion.
      *
-     * @param aValue
-     * @param rowIndex
-     * @param columnIndex
-     *****************************************************************/
-    @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        aList.get(rowIndex);
-    }
-
-    /*****************************************************************
-     * description
-     *
-     * @param account
+     * @param account the Account to be added
      *****************************************************************/
     public void addAccount(Account account) {
         aList.add(account);
@@ -67,10 +56,12 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Adds an Account to the specified position in aList,
+     * then notifies view of the insertion.
      *
-     * @param account
-     * @param row
+     * @param account   the Account to be added
+     * @param row       index at which the specified Account
+     *                  is to be inserted
      *****************************************************************/
     public void addAccountAtIndex(Account account, int row) {
         aList.add(row, account);
@@ -78,9 +69,11 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Removes the Account at the specified position in this list.
+     * Shifts any subsequent elements to the left (subtracts one from
+     * their indices). Then notifies view of removal.
      *
-     * @param index
+     * @param index the index of the element to be removed
      *****************************************************************/
     public void removeAccount(int index) {
         aList.remove(index);
@@ -88,26 +81,27 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Returns the Account at the specified position in this list.
      *
-     * @param index
-     * @return
+     * @param index index of the Account to return
+     * @return the Account at the specified position in this list
      *****************************************************************/
     public Account getAccount(int index) {
         return aList.get(index);
     }
 
     /*****************************************************************
-     * description
+     * Returns the number of Accounts in this list.
      *
-     * @return
+     * @return the number of Accounts in this list
      *****************************************************************/
     public int getSize() {
         return aList.size();
     }
 
     /*****************************************************************
-     * description
+     * Removes all of the Accounts from this list. The list will be
+     * empty after this call returns. View is notified also.
      *****************************************************************/
     public void clearAllAccounts() {
         aList.clear();
@@ -115,10 +109,11 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Updates the Account at the specified row according to the new
+     * values provided in the user input fields.
      *
-     * @param row
-     * @return
+     * @param row row index of the Account to update
+     * @return the Account to be stored at the specified position
      *****************************************************************/
     public Account updateRow(int row) {
         if (aList.get(row) instanceof CheckingAccount) {
@@ -136,9 +131,9 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Saves current aList state to a binary encoded file fileName.
      *
-     * @param fileName
+     * @param fileName the path/filename to write out
      *****************************************************************/
     public void saveAsBinary(String fileName) {
         try {
@@ -152,10 +147,10 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Saves current aList state to a plaintext file fileName.
      *
-     * @param filename
-     * @throws IOException
+     * @param fileName the path/filename to write out
+     * @throws IOException if unable to write file
      *****************************************************************/
     public void saveAsText(String filename) throws IOException {
         PrintWriter out = new PrintWriter(
@@ -177,11 +172,11 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * Saves current aList state to an XML file fileName.
+     * Saves current aList state to an XML encoded file fileName.
      * Uses the following schema: size of aList written to first
      * element, followed by elements for each Account within aList.
      *
-     * @param fileName  the path/filename to write out
+     * @param fileName the path/filename to write out
      *****************************************************************/
     public void saveAsXML(String fileName) {
         try {
@@ -201,7 +196,8 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Loads Accounts into aList from a binary encoded file,
+     * then notifies the view.
      *****************************************************************/
     @SuppressWarnings("unchecked")
     public void loadFromBinary() {
@@ -223,9 +219,10 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Loads Accounts into aList from a plaintext file,
+     * then notifies the view.
      *
-     * @throws IOException
+     * @throws IOException if file does not exist
      *****************************************************************/
     public void loadFromText() throws IOException {
         BufferedReader reader = new BufferedReader(
@@ -285,9 +282,10 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Returns the name of the column at the specified position.
      *
-     * @return String   TODO
+     * @param col the column index who's valued is to be queried
+     * @return the name of the column at the specified position
      *****************************************************************/
     @Override
     public String getColumnName(int col) {
@@ -295,9 +293,9 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Returns the number of columns in BankModel.
      *
-     * @return int  TODO
+     * @return the number of columns in BankModel
      *****************************************************************/
     @Override
     public int getColumnCount() {
@@ -305,9 +303,10 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Returns the number of rows in BankModel, which also corresponds
+     * with the number of Accounts in aList.
      *
-     * @return int  TODO
+     * @return the number of rows in BankModel
      *****************************************************************/
     @Override
     public int getRowCount() {
@@ -315,9 +314,12 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Returns the value for the cell at <code>column</code> and
+     * <code>row</code>.
      *
-     * @return Object   TODO
+     * @param   row        the row whose value is to be queried
+     * @param   column     the column whose value is to be queried
+     * @return  the value Object at the specified cell
      *****************************************************************/
     @Override
     public Object getValueAt(int row, int col) {
@@ -358,7 +360,7 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Sorts aList numerically by Account Number.
      *****************************************************************/
     public void sortByAccountNumber() {
         aList.sort(new accountNumberComparison());
@@ -366,7 +368,7 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Sorts aList alphabetically by Account Owner.
      *****************************************************************/
     public void sortByAccountOwner() {
         aList.sort(new accountOwnerComparison());
@@ -374,7 +376,7 @@ public class BankModel extends AbstractTableModel {
     }
 
     /*****************************************************************
-     * description
+     * Sorts aList chronologically by Date Opened.
      *****************************************************************/
     public void sortByDateOpened() {
         aList.sort(new accountDateComparison());
