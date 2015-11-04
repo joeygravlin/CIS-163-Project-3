@@ -6,11 +6,31 @@ import java.beans.XMLEncoder;
 import java.io.*;
 import java.util.ArrayList;
 
+
+/*****************************************************************
+ * BankModel is responsible for encapsulating the runtime state of
+ * BankGUI, along with providing methods by which the GUI can
+ * change the model's state. BankModel is also responsible for
+ * persistence of the current runtime state via binary, text, and
+ * XML formats.
+ *
+ * @author Taylor Cargill
+ * @author Chris Deneef
+ * @author Joe Gravlin
+ * @version 11/04/2015
+ *****************************************************************/
 public class BankModel extends AbstractTableModel {
 
+    /** A collection of all Accounts stored in this model */
     private ArrayList<Account> aList;
+
+    /** Names of columns in GUI table, corresponding to properties of
+     * Accounts stored within aList */
     private String[] columnNames;
 
+    /*****************************************************************
+     * Default BankModel constructor
+     *****************************************************************/
     public BankModel() {
         aList = new ArrayList<>();
         columnNames = new String[7];
@@ -24,38 +44,77 @@ public class BankModel extends AbstractTableModel {
         columnNames[6] = "Min Balance";
     }
 
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        aList.get(rowIndex);
-    }
-
-    public void addAccount(Account e) {
-        aList.add(e);
+    /*****************************************************************
+     * Adds an Account to the end of aList, then notifies view
+     * about the insertion.
+     *
+     * @param account the Account to be added
+     *****************************************************************/
+    public void addAccount(Account account) {
+        aList.add(account);
         fireTableRowsInserted(0, aList.size());
     }
 
-    public void addAccountAtIndex(Account e, int row) {
-        aList.add(row, e);
+    /*****************************************************************
+     * Adds an Account to the specified position in aList,
+     * then notifies view of the insertion.
+     *
+     * @param account   the Account to be added
+     * @param row       index at which the specified Account
+     *                  is to be inserted
+     *****************************************************************/
+    public void addAccountAtIndex(Account account, int row) {
+        aList.add(row, account);
         fireTableRowsInserted(0, aList.size());
     }
 
-    public void removeAccount(int e) {
-        aList.remove(e);
+    /*****************************************************************
+     * Removes the Account at the specified position in this list.
+     * Shifts any subsequent elements to the left (subtracts one from
+     * their indices). Then notifies view of removal.
+     *
+     * @param index the index of the element to be removed
+     *****************************************************************/
+    public void removeAccount(int index) {
+        aList.remove(index);
         fireTableRowsDeleted(0, aList.size());
     }
 
-    public Account getAccount(int i) {
-        return aList.get(i);
+    /*****************************************************************
+     * Returns the Account at the specified position in this list.
+     *
+     * @param index index of the Account to return
+     * @return the Account at the specified position in this list
+     *****************************************************************/
+    public Account getAccount(int index) {
+        return aList.get(index);
     }
 
+    /*****************************************************************
+     * Returns the number of Accounts in this list.
+     *
+     * @return the number of Accounts in this list
+     *****************************************************************/
     public int getSize() {
         return aList.size();
     }
 
+    /*****************************************************************
+     * Removes all of the Accounts from this list. The list will be
+     * empty after this call returns. View is notified also.
+     *****************************************************************/
     public void clearAllAccounts() {
         aList.clear();
         fireTableRowsDeleted(0, aList.size());
     }
 
+    /*****************************************************************
+     * Updates the Account at the specified row according to the new
+     * values provided in the user input fields.
+     *
+     * @param row row index of the Account to update
+     * @return the Account to be stored at the specified position
+     *****************************************************************/
     public Account updateRow(int row) {
         if (aList.get(row) instanceof CheckingAccount) {
             aList.remove(row);
@@ -71,7 +130,11 @@ public class BankModel extends AbstractTableModel {
             return null;
     }
 
-    // TODO: fix me
+    /*****************************************************************
+     * Saves current aList state to a binary encoded file fileName.
+     *
+     * @param fileName the path/filename to write out
+     *****************************************************************/
     public void saveAsBinary(String fileName) {
         try {
             FileOutputStream fos = new FileOutputStream(fileName);
@@ -83,16 +146,22 @@ public class BankModel extends AbstractTableModel {
         }
     }
 
-    public void saveAsText(String filename) throws IOException {
-        PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
+    /*****************************************************************
+     * Saves current aList state to a plaintext file fileName.
+     *
+     * @param fileName the path/filename to write out
+     * @throws IOException if unable to write file
+     *****************************************************************/
+    public void saveAsText(String fileName) throws IOException {
+        PrintWriter out = new PrintWriter(
+                new BufferedWriter(new FileWriter(fileName))
+        );
         for (int i = 0; i < aList.size(); i++) {
             out.println("1");
             out.println(aList.get(i).getNumber());
             out.println(aList.get(i).getOwner());
             // out.println(aList.get(i).getDateOpened());
             out.println(aList.get(i).getBalance());
-            // TODO: aList holds all types of Account, but these last 3
-            // methods only exist for SavingsAccount
             out.println(aList.get(i).getMonthlyFee());
             out.println(aList.get(i).getInterestRate());
             out.println(aList.get(i).getMinBalance());
@@ -101,6 +170,13 @@ public class BankModel extends AbstractTableModel {
 
     }
 
+    /*****************************************************************
+     * Saves current aList state to an XML encoded file fileName.
+     * Uses the following schema: size of aList written to first
+     * element, followed by elements for each Account within aList.
+     *
+     * @param fileName the path/filename to write out
+     *****************************************************************/
     public void saveAsXML(String fileName) {
         try {
             XMLEncoder encoder = new XMLEncoder(
@@ -118,6 +194,10 @@ public class BankModel extends AbstractTableModel {
         }
     }
 
+    /*****************************************************************
+     * Loads Accounts into aList from a binary encoded file,
+     * then notifies the view.
+     *****************************************************************/
     @SuppressWarnings("unchecked")
     public void loadFromBinary() {
         try {
@@ -137,8 +217,16 @@ public class BankModel extends AbstractTableModel {
         }
     }
 
+    /*****************************************************************
+     * Loads Accounts into aList from a plaintext file,
+     * then notifies the view.
+     *
+     * @throws IOException if file does not exist
+     *****************************************************************/
     public void loadFromText() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("./persist/BankModel.txt"));
+        BufferedReader reader = new BufferedReader(
+                new FileReader("./persist/BankModel.txt")
+        );
         String line = reader.readLine();
         fireTableRowsDeleted(0, aList.size());
         while (line != null) {
@@ -151,9 +239,14 @@ public class BankModel extends AbstractTableModel {
                 String monthlyFee = (reader.readLine());
                 String interestRate = (reader.readLine());
                 String minBalance = (reader.readLine());
-                accountItems = new CheckingAccount(Integer.parseInt(num), accountOwner,
-                        Double.parseDouble(currentBalance), Double.parseDouble(monthlyFee),
-                        Double.parseDouble(interestRate), Double.parseDouble(minBalance));
+                accountItems = new CheckingAccount(
+                        Integer.parseInt(num),
+                        accountOwner,
+                        Double.parseDouble(currentBalance),
+                        Double.parseDouble(monthlyFee),
+                        Double.parseDouble(interestRate),
+                        Double.parseDouble(minBalance)
+                );
                 aList.add(accountItems);
             }
 
@@ -162,6 +255,10 @@ public class BankModel extends AbstractTableModel {
         reader.close();
     }
 
+    /*****************************************************************
+     * Loads Accounts into aList from an XML encoded file,
+     * then notifies the view.
+     *****************************************************************/
     public void loadFromXML() {
         try {
             XMLDecoder decoder = new XMLDecoder(
@@ -174,8 +271,6 @@ public class BankModel extends AbstractTableModel {
                 Account a = (Account) decoder.readObject();
                 aList.add(a);
                 listSize--;
-//                System.out.println(a);
-//                System.out.println(aList);
             }
             fireTableRowsInserted(0, aList.size());
             decoder.close();
@@ -185,28 +280,53 @@ public class BankModel extends AbstractTableModel {
         }
     }
 
+    /*****************************************************************
+     * Returns the name of the column at the specified position.
+     *
+     * @param col the column index who's valued is to be queried
+     * @return the name of the column at the specified position
+     *****************************************************************/
     @Override
     public String getColumnName(int col) {
         return columnNames[col];
     }
 
+    /*****************************************************************
+     * Returns the number of columns in BankModel.
+     *
+     * @return the number of columns in BankModel
+     *****************************************************************/
     @Override
     public int getColumnCount() {
         return columnNames.length;
     }
 
+    /*****************************************************************
+     * Returns the number of rows in BankModel, which also corresponds
+     * with the number of Accounts in aList.
+     *
+     * @return the number of rows in BankModel
+     *****************************************************************/
     @Override
     public int getRowCount() {
         return aList.size();
     }
 
+    /*****************************************************************
+     * Returns the value for the cell at <code>column</code> and
+     * <code>row</code>.
+     *
+     * @param   row        the row whose value is to be queried
+     * @param   column     the column whose value is to be queried
+     * @return  the value Object at the specified cell
+     *****************************************************************/
     @Override
     public Object getValueAt(int row, int col) {
-        // TODO Auto-generated method stub
         switch (col) {
         case 0:
             return (aList.get(row).getNumber());
 
+        // TODO: Fix me
         case 1:
             return (aList.get(row).getDateOpened());
         // if (DateFormat.getDateInstance(DateFormat.SHORT).format(
@@ -238,17 +358,25 @@ public class BankModel extends AbstractTableModel {
         return col;
     }
 
+    /*****************************************************************
+     * Sorts aList numerically by Account Number.
+     *****************************************************************/
     public void sortByAccountNumber() {
         aList.sort(new accountNumberComparison());
         fireTableRowsInserted(0, aList.size());
     }
 
+    /*****************************************************************
+     * Sorts aList alphabetically by Account Owner.
+     *****************************************************************/
     public void sortByAccountOwner() {
         aList.sort(new accountOwnerComparison());
         fireTableRowsInserted(0, aList.size());
     }
 
-    // fix me
+    /*****************************************************************
+     * Sorts aList chronologically by Date Opened.
+     *****************************************************************/
     public void sortByDateOpened() {
         aList.sort(new accountDateComparison());
         fireTableRowsInserted(0, aList.size());
